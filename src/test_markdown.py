@@ -185,3 +185,9 @@ class TestTextToTextNodes(unittest.TestCase):
             ],
             nodes
         )
+
+    def test_broken_bold_markdown_syntax(self):
+        text = "This is **broken markdown."
+        with self.assertRaises(Exception) as context:
+            text_to_text_nodes(text)
+        self.assertEqual(str(context.exception), 'Invalid markdown detected.')
