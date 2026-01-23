@@ -12,34 +12,33 @@ def markdown_to_html_node(markdown):
 
     for block in blocks:
         block_type = block_to_block_type(block)
+        sanitized_text = _sanitize_text(block, block_type)
 
         if block_type == BlockType.PARAGRAPH:
-            sanitized_text = _sanitize_text(block)
             children = text_to_children(sanitized_text)
             node = ParentNode('p', children)
             html_nodes.append(node)
 
         elif block_type == BlockType.HEADING:
-            tag = _get_heading_tag(block)
-            value = block.strip('#')
+            tag = _get_heading_tag(sanitized_text)
+            value = sanitized_text.strip('#')
             children = text_to_children(value)
             node = ParentNode(tag, children)
             html_nodes.append(node)
 
         elif block_type == BlockType.CODE:
-            value = block.strip('`')
-            node = text_node_to_html_node(TextNode(value, TextType.CODE))
-            html_nodes.append(node)
+            #value = block.strip("`\n")
+            node = text_node_to_html_node(TextNode(sanitized_text, TextType.CODE))
+            html_nodes.append(ParentNode('pre', [node]))
 
         elif block_type == BlockType.QUOTE:
-            value = block.strip('>')
+            value = sanitized_text.strip('>')
             children = text_to_children(value)
             node = ParentNode('blockquote', children)
             html_nodes.append(node)
 
         elif block_type == BlockType.UNORDERED_LIST:
-            value = block.strip('')
-
+            pass
     return ParentNode('div', html_nodes)
 
 def _get_heading_tag(block):
@@ -56,5 +55,8 @@ def text_to_children(text):
         children.append(child)
     return children
 
-def _sanitize_text(text):
-    return re.sub(r'\s+', ' ', text)
+def _sanitize_text(text, block_type):
+    if block_type == BlockType.CODE:
+        return re.sub(r'^[ \s`]+', '', text, flags=re.MULTILINE)
+    else:
+        return re.sub(r'\s+', ' ', text)

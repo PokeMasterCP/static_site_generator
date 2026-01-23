@@ -21,7 +21,7 @@ def markdown_to_blocks(markdown):
 def block_to_block_type(block):
     if re.match(r'^#{1,6}', block):
         return BlockType.HEADING
-    elif re.match(r'^`{3}\n*.+\n*`{3}$', block):
+    elif re.match(r'^`{3}[\s\S]+?`{3}$', block):
         return BlockType.CODE
     elif re.match(r'(m?)^>.+', block):
         return BlockType.QUOTE
