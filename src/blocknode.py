@@ -27,10 +27,11 @@ def block_to_block_type(block):
         return BlockType.QUOTE
     elif re.match(r'(m?)^-.+', block):
         return BlockType.UNORDERED_LIST
-    elif re.match(r'(m?)^\d\. .+', block):
+    elif re.match(r'(?m)^\s*\d+\.\s+', block):
         index = 1
         for line in block.split('\n'):
-            if line != '' and int(line[0]) != index:
+            counter = line.strip()
+            if counter and int(counter[0]) != index:
                 raise Exception('Invalid ordered list detected.')
             index += 1
         return BlockType.ORDERED_LIST

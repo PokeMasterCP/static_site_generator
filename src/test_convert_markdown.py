@@ -33,3 +33,76 @@ class TestConvertMarkdownToHTMLNode(TestCase):
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+
+    def test_heading6(self):
+        md = """
+    ###### Heading 6
+    This is random text, and this is **bolded** text.
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h6>Heading 6 This is random text, and this is <b>bolded</b> text.</h6></div>"
+        )
+
+    def test_heading1(self):
+        md = """
+            # Heading 1
+            This is random text, and this is _italic_ text.
+            """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>Heading 1 This is random text, and this is <i>italic</i> text.</h1></div>"
+        )
+
+    def test_quoteblock_single_line(self):
+        md = """
+    > This is a single line quote
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a single line quote</blockquote></div>"
+        )
+
+    def test_quoteblock_double_line(self):
+        md = """
+    > This is a double
+    line quote
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a double line quote</blockquote></div>"
+        )
+
+    def test_unordered_list(self):
+        md = """
+    - Unordered Item
+    - Another Unordered Item
+    - Yet Another Unordered Item
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>Unordered Item</li><li>Another Unordered Item</li><li>Yet Another Unordered Item</li></ul></div>"
+        )
+
+    def test_ordered_list(self):
+        md = """
+    1. First Item
+    2. Second Item
+    3. Third Item
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ol><li>First Item</li><li>Second Item</li><li>Third Item</li></ol></div>"
+        )

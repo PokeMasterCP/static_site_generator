@@ -3,7 +3,7 @@ import re
 from blocknode import markdown_to_blocks, block_to_block_type, BlockType
 from markdown import text_to_text_nodes, text_node_to_html_node
 from textnode import TextNode, TextType
-from src.htmlnode import ParentNode
+from src.htmlnode import ParentNode, LeafNode
 
 
 def markdown_to_html_node(markdown):
@@ -21,24 +21,30 @@ def markdown_to_html_node(markdown):
 
         elif block_type == BlockType.HEADING:
             tag = _get_heading_tag(sanitized_text)
-            value = sanitized_text.strip('#')
+            value = sanitized_text.strip('# ')
             children = text_to_children(value)
             node = ParentNode(tag, children)
             html_nodes.append(node)
 
         elif block_type == BlockType.CODE:
-            #value = block.strip("`\n")
             node = text_node_to_html_node(TextNode(sanitized_text, TextType.CODE))
             html_nodes.append(ParentNode('pre', [node]))
 
         elif block_type == BlockType.QUOTE:
-            value = sanitized_text.strip('>')
+            value = sanitized_text.strip('> ')
             children = text_to_children(value)
             node = ParentNode('blockquote', children)
             html_nodes.append(node)
 
         elif block_type == BlockType.UNORDERED_LIST:
-            pass
+            list_items = sanitized_text.split('-')
+            item_nodes = _list_items_to_html(list_items)
+            html_nodes.append(ParentNode('ul', item_nodes))
+
+        elif block_type == BlockType.ORDERED_LIST:
+            list_items = re.split((r'(?:^|\s)\d+\.\s+'), sanitized_text)
+            item_nodes = _list_items_to_html(list_items)
+            html_nodes.append(ParentNode('ol', item_nodes))
     return ParentNode('div', html_nodes)
 
 def _get_heading_tag(block):
@@ -60,3 +66,11 @@ def _sanitize_text(text, block_type):
         return re.sub(r'^[ \s`]+', '', text, flags=re.MULTILINE)
     else:
         return re.sub(r'\s+', ' ', text)
+
+def _list_items_to_html(list_items):
+    html_nodes = []
+    for item in list_items:
+        if item != '':
+            node = LeafNode('li', item.strip())
+            html_nodes.append(node)
+    return html_nodes
