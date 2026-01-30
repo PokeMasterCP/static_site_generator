@@ -59,20 +59,26 @@ def split_nodes_link(old_nodes):
             continue
 
         matches = extract_markdown_links(node.text)
+        remaining_text = node.text
+
         if not matches:
             split_nodes.append(node)
             continue
-        remaining_text = node.text
-
+        
         for match in matches:
             alt_text, url = match[0], match[1]
-            split_list = remaining_text.split(f'[{alt_text}]({url})', 1)
-            text_node = TextNode(split_list[0], TextType.TEXT)
-            image_node = TextNode(alt_text, TextType.LINK, url)
-            remaining_text = split_list[1]
-            split_nodes.append(text_node)
-            split_nodes.append(image_node)
-        if remaining_text != "":
+            text_list = remaining_text.split(f'[{alt_text}]({url})', 1)
+
+            text_before_match = text_list[0]
+
+            link_node = TextNode(alt_text, TextType.LINK, url)
+            if text_before_match:
+                pre_text_node = TextNode(text_before_match, TextType.TEXT)
+                split_nodes.append(pre_text_node)
+            split_nodes.append(link_node)
+            remaining_text = text_list[1]
+            
+        if remaining_text:
             split_nodes.append(TextNode(remaining_text, TextType.TEXT))
     return split_nodes
 
@@ -91,7 +97,6 @@ def text_to_text_nodes(text):
     nodes = split_nodes_delimiter(nodes, '`', TextType.CODE)
     nodes = split_nodes_image(nodes)
     nodes = split_nodes_link(nodes)
-
     return nodes
 
 def text_node_to_html_node(text_node):

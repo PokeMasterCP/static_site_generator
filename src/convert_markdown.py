@@ -3,7 +3,7 @@ import re
 from blocknode import markdown_to_blocks, block_to_block_type, BlockType
 from markdown import text_to_text_nodes, text_node_to_html_node
 from textnode import TextNode, TextType
-from src.htmlnode import ParentNode, LeafNode
+from htmlnode import ParentNode, LeafNode
 
 
 def markdown_to_html_node(markdown):
@@ -70,7 +70,9 @@ def _sanitize_text(text, block_type):
 def _list_items_to_html(list_items):
     html_nodes = []
     for item in list_items:
+        item = item.strip()
         if item != '':
-            node = LeafNode('li', item.strip())
-            html_nodes.append(node)
+            children = text_to_children(item)
+            li_node = ParentNode('li', children)
+            html_nodes.append(li_node)
     return html_nodes

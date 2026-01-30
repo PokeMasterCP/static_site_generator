@@ -106,3 +106,12 @@ class TestConvertMarkdownToHTMLNode(TestCase):
             html,
             "<div><ol><li>First Item</li><li>Second Item</li><li>Third Item</li></ol></div>"
         )
+
+    def test_unordered_list_of_links(self):
+        md = """- [Why Glorfindel is More Impressive than Legolas](./blog/glorfindel)"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            '<div><ul><li><a href="./blog/glorfindel">Why Glorfindel is More Impressive than Legolas</a></li></ul></div>'
+        )
