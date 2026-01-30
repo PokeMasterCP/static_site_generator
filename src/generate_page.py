@@ -1,3 +1,4 @@
+import os
 
 from convert_markdown import markdown_to_html_node
 
@@ -20,5 +21,8 @@ def generate_page(from_path, template_path, dest_path):
     html_with_title = template.replace('<title>{{ Title }}</title>', title)
     final_html = html_with_title.replace('<article>{{ Content }}</article>', html_content)
 
+    path = os.path.dirname(dest_path)
+    if not os.path.exists(path):
+        os.makedirs(path)
     with open(dest_path, 'w') as f:
         f.write(final_html)
