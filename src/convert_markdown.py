@@ -9,11 +9,11 @@ from htmlnode import ParentNode, LeafNode
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
     html_nodes = []
-
+    
     for block in blocks:
         block_type = block_to_block_type(block)
         sanitized_text = _sanitize_text(block, block_type)
-
+        
         if block_type == BlockType.PARAGRAPH:
             children = text_to_children(sanitized_text)
             node = ParentNode('p', children)

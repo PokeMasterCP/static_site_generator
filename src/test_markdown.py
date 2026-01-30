@@ -54,6 +54,13 @@ class TestExtractMarkdownImages(unittest.TestCase):
         matches = extract_markdown_images('This is text with no images')
         self.assertListEqual([], matches)
 
+    def test_extract_only_image(self):
+        matches = extract_markdown_images("![JRR Tolkien sitting](./images/tolkien.png)")
+        self.assertListEqual(
+            matches,
+            [("JRR Tolkien sitting", "./images/tolkien.png")]
+        )
+
 class TestExtractMarkdownLinks(unittest.TestCase):
     def test_extract_links_no_match(self):
         matches = extract_markdown_links('This is text with no links')
