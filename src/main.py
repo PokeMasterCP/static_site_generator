@@ -2,7 +2,7 @@
 import os
 import shutil
 
-from generate_page import generate_page
+from generate_page import generate_pages_recursively
 
 def export_to_dst(src, dst):
     if not os.path.exists(src):
@@ -42,7 +42,7 @@ def _delete_contents(dst, contents):
 
 def main():
     export_to_dst('./static', './public')
-    generate_page('./content/index.md', './template.html', './public/index.html')
+    generate_pages_recursively('./content', './template.html', './public')
 
 if __name__ == '__main__':
     main()

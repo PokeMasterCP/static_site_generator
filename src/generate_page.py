@@ -26,3 +26,19 @@ def generate_page(from_path, template_path, dest_path):
         os.makedirs(path)
     with open(dest_path, 'w') as f:
         f.write(final_html)
+
+def generate_pages_recursively(dir_path_content, template_path, dest_path):
+    if not os.path.exists(dest_path):
+        os.makedirs(dest_path)
+    
+    content = os.listdir(dir_path_content)
+
+    for file in content:
+        src_file = f'{dir_path_content}/{file}'
+        dest_file = f'{dest_path}/{file.replace("md", "html")}'
+        if os.path.isfile(src_file):
+            print(f"Using {src_file} to create {dest_file}")
+            generate_page(src_file, template_path, dest_file)
+            continue
+        print(f'Moving into {src_file} and {dest_file}')
+        generate_pages_recursively(src_file, template_path,dest_file)

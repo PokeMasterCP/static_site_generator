@@ -15,6 +15,8 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             raise Exception('Invalid markdown detected.')
 
         for index in range(len(split_text)):
+            if split_text[index] == '':
+                continue
             if index %2 == 0:
                 new_node = TextNode(split_text[index], TextType.TEXT)
                 split_nodes.append(new_node)
@@ -108,19 +110,20 @@ def text_to_text_nodes(text):
 def text_node_to_html_node(text_node):
     if text_node.text_type not in TextType:
         raise ValueError(f'Unsupported text type: {text_node.text_type}')
-
-    match text_node.text_type:
-        case TextType.TEXT:
-            return LeafNode(None, text_node.text)
-        case TextType.BOLD:
-            return LeafNode('b', text_node.text)
-        case TextType.ITALIC:
-            return LeafNode('i', text_node.text)
-        case TextType.CODE:
-            return LeafNode('code', text_node.text)
-        case TextType.LINK:
-            return LeafNode('a', text_node.text, {'href': text_node.url})
-        case TextType.IMAGE:
-            return LeafNode('img', " ", {'src': text_node.url, 'alt': text_node.text})
-        case _:
-            raise ValueError(f'Unsupported text type: {text_node.text_type}')
+    
+    if text_node.text:
+        match text_node.text_type:
+            case TextType.TEXT:
+                return LeafNode(None, text_node.text)
+            case TextType.BOLD:
+                return LeafNode('b', text_node.text)
+            case TextType.ITALIC:
+                return LeafNode('i', text_node.text)
+            case TextType.CODE:
+                return LeafNode('code', text_node.text)
+            case TextType.LINK:
+                return LeafNode('a', text_node.text, {'href': text_node.url})
+            case TextType.IMAGE:
+                return LeafNode('img', " ", {'src': text_node.url, 'alt': text_node.text})
+            case _:
+                raise ValueError(f'Unsupported text type: {text_node.text_type}')

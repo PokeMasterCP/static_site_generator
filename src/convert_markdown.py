@@ -63,7 +63,7 @@ def text_to_children(text):
 
 def _sanitize_text(text, block_type):
     if block_type == BlockType.CODE:
-        return re.sub(r'^[ \s`]+', '', text, flags=re.MULTILINE)
+        return re.sub(r'^[\s`]+', '', text, flags=re.MULTILINE) 
     else:
         return re.sub(r'\s+', ' ', text)
 

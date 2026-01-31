@@ -115,3 +115,21 @@ class TestConvertMarkdownToHTMLNode(TestCase):
             html,
             '<div><ul><li><a href="./blog/glorfindel">Why Glorfindel is More Impressive than Legolas</a></li></ul></div>'
         )
+    
+    def test_link_with_symbols(self):
+        md = """[< Back Home](/)"""
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            '<div><p><a href="/">< Back Home</a></p></div>'
+        )
+
+    def test_bolded_with_quotes(self):
+        md = '**"Váya márië."**'
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            '<div><p><b>"Váya márië."</b></p></div>'
+        )
