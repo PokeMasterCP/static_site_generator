@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import shutil
+import sys
 
 from generate_page import generate_pages_recursively
 
@@ -41,8 +42,12 @@ def _delete_contents(dst, contents):
 
 
 def main():
-    export_to_dst('./static', './public')
-    generate_pages_recursively('./content', './template.html', './public')
+    if sys.argv[1]:
+        basepath = sys.argv[1]
+    else:
+        basepath = '/'
+    export_to_dst('./static', './docs')
+    generate_pages_recursively('./content', './template.html', './docs', basepath)
 
 if __name__ == '__main__':
     main()

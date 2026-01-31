@@ -27,7 +27,7 @@ def markdown_to_html_node(markdown):
             html_nodes.append(node)
 
         elif block_type == BlockType.CODE:
-            node = text_node_to_html_node(TextNode(sanitized_text, TextType.CODE))
+            node = text_node_to_html_node(TextNode(sanitized_text.strip('`'), TextType.CODE))
             html_nodes.append(ParentNode('pre', [node]))
 
         elif block_type == BlockType.QUOTE:
