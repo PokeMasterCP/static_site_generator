@@ -42,7 +42,7 @@ def _delete_contents(dst, contents):
 
 
 def main():
-    if sys.argv[1]:
+    if len(sys.argv) > 1:
         basepath = sys.argv[1]
     else:
         basepath = '/'

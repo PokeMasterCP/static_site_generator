@@ -20,8 +20,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
 
     html = template.replace('<title>{{ Title }}</title>', title)
     html = html.replace('<article>{{ Content }}</article>', html_content)
-    html = html.replace('href="./', f'href="{basepath}')
-    final_html = html.replace('src="./', f'href="{basepath}')
+    html = html.replace('href="/', f'href="{basepath}')
+    final_html = html.replace('src="/', f'src="{basepath}')
 
     path = os.path.dirname(dest_path)
     if not os.path.exists(path):
